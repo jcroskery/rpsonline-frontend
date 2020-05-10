@@ -4,11 +4,8 @@ html, body {
 }
 
 .backgroundimg {
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    position: absolute;
+    position: fixed;
+    z-index: 1;
     top: 0;
     left: 0;
     height: 100%;
@@ -23,13 +20,29 @@ html, body {
     background: url("/images/red.jpg");
     opacity: 0.5;
 }
-
-#buttonDiv {
-    z-index: 1;
+#mainDiv {
+    display: inline-grid;
+    z-index: 2;
     position: relative;
-    display: inline-block;
-    padding: 15px;
+    top: 0;
+    left: 0;
     width: 100%;
-    margin: auto;
-    text-align: center;
+}
+#rock {
+    grid-column-start: 1;
+    grid-column-end: 1;
+    grid-row-start: 1;
+    grid-row-end: 1;
+}
+#paper {
+    grid-column-start:2;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 1;
+}
+#scissors {
+    grid-column-start: 3;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 1;
 }
