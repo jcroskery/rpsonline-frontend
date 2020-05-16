@@ -57,7 +57,7 @@ html, body {
     grid-column: 1/4;
 	width: 100%;
 	display: grid;
-	grid-template-columns: max-content auto;
+	grid-template-columns: max-content max-content max-content max-content;
     position: absolute;
     top: 0;
     grid-row: 1/1;
@@ -97,7 +97,22 @@ html, body {
 	display: grid;
 	border-right: 1px #00000088 solid;	
 	background-color: #E1B42Bcc;
+	grid-column: 1/1;
+	grid-row: 1/1;
 }
+#yourScore {
+	grid-column: 2/2;
+	grid-row: 1/1;
+}
+#opponentScore {
+	grid-column: 3/3;
+	grid-row: 1/1;
+}
+#round {
+	grid-column: 4/4;
+	grid-row: 1/1;
+}
+
 #play {
 	grid-row: 1/1;
 	grid-column: 1/1;
