@@ -18,13 +18,10 @@
         </div>
         <div id="mainDiv">
             <div id="headerDiv">
-                <div id="roboDiv">
-                    <span id="play">Play against:</span>
-                    <label class="switch">
-                        <input class="switch-input" type="checkbox" />
-                        <span class="switch-label" data-on="Robot" data-off="Human"></span>
-                        <span class="switch-handle"></span>
-                    </label>
+                <div id="idDiv">
+                    <span class="idSpan" id="bigIdSpan">Game Id:</span>
+                    <span class="idSpan" id="smallIdSpan">#</span>
+                    <span id="id" class="num">1</span>
                 </div>
                 <div id="scoreDiv">
                     <span id="score">Score:</span>
@@ -41,10 +38,13 @@
                     <span id="statusSpan">Status:</span>
                     <span id="status"></span>
                 </div>
-                <div id="idDiv">
-                    <span class="idSpan" id="bigIdSpan">Game Id:</span>
-                    <span class="idSpan" id="smallIdSpan">#</span>
-                    <span id="id" class="num">1</span>
+                <div id="roboDiv">
+                    <span id="play">Play against:</span>
+                    <label class="switch">
+                        <input class="switch-input" type="checkbox" />
+                        <span class="switch-label" data-on="Robot" data-off="Human"></span>
+                        <span class="switch-handle"></span>
+                    </label>
                 </div>
                 <div id="newGameDiv">
                     <input type="image" id="refresh" src="/images/refresh.png"/>
