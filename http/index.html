@@ -26,22 +26,44 @@
                         <span class="switch-handle"></span>
                     </label>
                 </div>
-                <div id="yourScore">
-                    <span>Games won: 1 out of 3</span>
+                <div id="scoreDiv">
+                    <span id="score">Score:</span>
+                    <span class="num leftMargin">1</span>
+                    <span class="topSpan">to</span>
+                    <span class="num">2</span>
                 </div>
-                <div id="opponentScore">
-                    <span>Games lost: 1 out of 3</span>
+                <div id="roundDiv">
+                    <span class="round" id="bigRound">Round:</span>
+                    <span class="round" id="smallRound">R</span>
+                    <span class="num">3</span>
                 </div>
-                <div id="round">
-                    <span>Round 3</span>
+                <div id="statusDiv">
+                    <span id="statusSpan">Status:</span>
+                    <span id="status"></span>
+                </div>
+                <div id="idDiv">
+                    <span class="idSpan" id="bigIdSpan">Game Id:</span>
+                    <span class="idSpan" id="smallIdSpan">#</span>
+                    <span id="id" class="num">1</span>
+                </div>
+                <div id="newGameDiv">
+                    <input type="image" id="refresh" src="/images/refresh.png"/>
                 </div>
             </div>
-            <div id="imageDiv">
-                <input type="image" id="rock" src="/images/rock.png" />
-                <input type="image" id="paper" src="/images/paper.png" />
-                <input type="image" id="scissors" src="/images/scissors.png" />
+            <div class="imageDiv" id="imageDiv1">
+                <input type="image" id="rock" class="image" src="/images/rock.png" />
+                <input type="image" id="paper" class="image" src="/images/paper.png" />
+                <input type="image" id="scissors" class="image" src="/images/scissors.png" />
             </div>
-            <span id="message">Rock, Paper, Scissors! Choose wisely!</span>
+            <div class="imageDiv" id="imageDiv2">
+                <img src="/images/rock.png" id="smallRock" class="smallImage"/>
+                <img src="/images/paper.png" id="smallPaper" class="smallImage"/>
+                <img src="/images/scissors.png" id="smallScissors" class="smallImage"/>
+            </div>
+            <div id="footer">
+                <span id="message"></span>
+                <button id="newGame">New Game</button>
+            </div>
         </div>
     </div>
     <script src="/js/main.js"></script>
