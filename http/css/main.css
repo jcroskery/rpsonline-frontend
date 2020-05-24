@@ -42,9 +42,6 @@ html, body {
 	display: none;
 	margin-left: 42.5vw;
 }
-#smallPaper {
-	display: inline;
-}
 #rock {
 	margin-left: 5vw;
 }
@@ -151,9 +148,12 @@ span {
         height: 20vh;
     }
     #message {
-        width: calc(40vw - 60px);
-        font-size: calc(7px + 1.8vw);
-    }
+        width: 90vw;
+        font-size: 20px;
+	}
+	#smallMessage span {
+		font-size: 15px!important;
+	}
 }
 #refresh {
 	margin: 10px;
