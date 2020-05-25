@@ -340,3 +340,40 @@ span {
 	-moz-transition: All 0.3s ease;
 	-o-transition: All 0.3s ease;
 }
+
+#notificationP {
+    color: white;
+    padding: 0 40px;
+}
+#notificationDiv {
+    width: 60%;
+    top: 0;
+    left: 20%;
+    right: 20%;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 22px;
+    text-align: center;
+	position: fixed;
+	z-index: 3;
+}
+#closeNotification {
+    margin-left: -40px;
+    width: 40px;
+    left: 80%;
+    top: 0;
+    position: fixed;
+    cursor: pointer;
+}
+#greyDiv {
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	background-color: rgba(0, 0, 0, 0.7);
+	position: fixed;
+	z-index: 3;
+}
+#closeNotification * {
+	z-index: 4;
+	position: fixed;
+}

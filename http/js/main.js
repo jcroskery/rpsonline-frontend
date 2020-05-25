@@ -1,6 +1,40 @@
 round = 1;
 yourScore = 0;
 opponentScore = 0;
+human = 1;
+function closeNotification() {
+    var element = document.getElementById("greyDiv");
+    if (element != null) {
+        element.parentNode.removeChild(element);
+    }
+}
+function createNotification(notificationText) {
+    closeNotification(); //Let's close other notifications first
+    let greyDiv = document.createElement("div");
+    greyDiv.id = 'greyDiv';
+    greyDiv.innerHTML = "\
+        <div id='notificationDiv'>\
+        <p id='notificationP'>" + notificationText + "</p>\
+        <svg id='closeNotification' viewBox='0, 0, 100, 100'>\
+            <circle cx=50 cy=50 r=50 fill=black />\
+            <rect class='whiteRect' y='55' rx=13 ry=13 x='-45' transform='rotate(-45 0 0)' width='90' height='25' />\
+            <rect class='whiteRect' y='-15' rx=13 ry=13 x='25' transform='rotate(45 0 0)' width='90' height='25' />\
+        </svg>\
+        </div>";
+    document.getElementById('body').appendChild(greyDiv);
+    document.getElementById('closeNotification').addEventListener('click', closeNotification);
+}
+function keydown(event) {
+    if (event.keyCode == 27) {
+        closeNotification();
+    }
+}
+document.addEventListener('keydown', keydown);
+closeButton = document.getElementById('closeNotification');
+if (closeButton) {
+    closeButton.addEventListener('click', closeNotification);
+}
+
 function updateRound() {
     document.getElementById("roundNum").innerText = round;
 }
@@ -112,10 +146,12 @@ searchForOpponent();
 opponentMove();
 updateRound();
 updateScore();
+createNotification("Hi");
 //displayOpponentSelection("Paper", -1);
 //displayYourSelection("Paper", 0);
 //displayYourSelection("Paper", 1);
 //displayAllSelections();
+
 /*Searching
 
 */
