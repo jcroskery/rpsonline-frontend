@@ -207,7 +207,7 @@ function opponentWins() {
 
 }
 function makeMove(move) {
-
+    sendReq({"id": window.localStorage.getItem("gamerId"), "move": move}, "https://api.games.olmmcc.tk/make_move", () => {});
 }
 function checkStatus() {
     sendReq({"id": window.localStorage.getItem("gamerId")}, "https://api.games.olmmcc.tk/get_status_of_game", (json) => {
