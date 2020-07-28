@@ -1,7 +1,9 @@
 round = 1;
 yourScore = 0;
 opponentScore = 0;
-human = 1;
+currentMove = -1;
+takingInputs = false;
+displayTimer = 5;
 function closeNotification() {
     var element = document.getElementById("greyDiv");
     if (element != null) {
@@ -29,23 +31,16 @@ function keydown(event) {
         closeNotification();
     }
 }
-document.addEventListener('keydown', keydown);
-closeButton = document.getElementById('closeNotification');
-if (closeButton) {
-    closeButton.addEventListener('click', closeNotification);
-}
-
-function updateRound() {
-    document.getElementById("roundNum").innerText = round;
-}
-function updateScore() {
-    document.getElementById("yourScore").innerText = yourScore;
-    document.getElementById("opponentScore").innerText = opponentScore;
-}
 function changeOpacity(new_opacity) {
     document.getElementById("back2").style.opacity = new_opacity;
 }
-function displayOpponentSelection(option, result) {
+function displayOpponentSelection(ymove, result) {
+    let option = "rock";
+    if (ymove == 1) {
+        option = "paper";
+    } else if (ymove == 2) {
+        option = "scissors";
+    }
     let selection = document.getElementById("small" + option);
     selection.style.display = "inline";
     let color = "white";
@@ -59,13 +54,13 @@ function displayOpponentSelection(option, result) {
 }
 function displayYourSelection(option, result) {
     let selection = document.getElementById(option.toLowerCase());
-    if (option != "Rock") {
+    if (option != 0) {
         document.getElementById("rock").style.opacity = 0;
     }
-    if (option != "Paper") {
+    if (option != 1) {
         document.getElementById("paper").style.opacity = 0;
     }
-    if (option != "Scissors") {
+    if (option != 2) {
         document.getElementById("scissors").style.opacity = 0;
     }
     selection.style.opacity = 1;
@@ -79,10 +74,10 @@ function displayYourSelection(option, result) {
     selection.style.border = "5px solid " + color;
 }
 function displayAllSelections() {
-    let options = ["Rock", "Paper", "Scissors"];
+    let options = ["rock", "paper", "scissors"];
     options.forEach((option) => {
-        document.getElementById(option.toLowerCase()).style.opacity = 1;
-        document.getElementById(option.toLowerCase()).style.border = "none";
+        document.getElementById(option).style.opacity = 1;
+        document.getElementById(option).style.border = "none";
         document.getElementById("small" + option).style.display = "None";
     });
 }
@@ -95,6 +90,9 @@ function updateSmallMessage(messageText) {
     newSmallMessage.classList = "smallMessage";
     newSmallMessage.innerText = messageText;
     document.getElementById("footer").appendChild(newSmallMessage);
+}
+function updateStatus(statusText) {
+    document.getElementById("status").innerText = statusText;
 }
 function youLoseRound() {
     updateMessage("You lost round " + round + "!");
@@ -113,22 +111,38 @@ function youWin() {
 }
 function yourMove() {
     updateSmallMessage("Waiting for your move.");
+    updateStatus("Your move");
+    takingInputs = true;
+    displayAllSelections();
 }
-function opponentMove() {
+function opponentMove(ymove) {
     updateSmallMessage("Waiting for opponent's move.");
+    takingInputs = false;
+    displayYourSelection(ymove, 0);
+}
+function newGameScreen() {
+    updateStatus("Choose your opponent type");
+    document.getElementById("imageDiv2").style.display = "none";
+    document.getElementById("footer").innerHTML =
+        '<div id="roboDiv">\
+        <span id="play">Play against:</span>\
+        <label class="switch">\
+            <input id="switch-input" type="checkbox" />\
+            <span class="switch-label" data-on="Robot" data-off="Human"></span>\
+            <span class="switch-handle"></span>\
+        </label>\
+        <button id="startButton">Start Game</button>\
+    </div>';
+    document.getElementById("startButton").addEventListener("click", startSearch);
 }
 function searchForOpponent() {
-    document.getElementById("message").innerText = "Searching for human opponent";
     let images = document.getElementsByClassName("image");
     for (image of images) {
         image.style.opacity = 0.5;
     }
-    let footer = document.getElementById("footer");
-    let smallMessage = document.createElement("div");
-    smallMessage.id = "smallMessage";
-    smallMessage.classList = "smallMessage";
-    smallMessage.innerHTML = '<span>Note: There have been</span> <span class="num">0</span> <span>human visitors in the last hour.</span>';
-    footer.appendChild(smallMessage);
+    addMessages();
+    document.getElementById("message").innerText = "Searching for human opponent";
+    document.getElementById("smallMessage").innerHTML = '<span>Note: There have been</span> <span class="num">0</span> <span>human visitors in the last hour.</span>';
     let status = document.getElementById("status");
     let searchAnimation = () => {
         status.innerHTML = "&nbsp".repeat(3 - phase) + ".".repeat(phase) + "&nbsp;Searching for opponent&nbsp;" + ".".repeat(phase) + "&nbsp".repeat(3 - phase);
@@ -139,14 +153,177 @@ function searchForOpponent() {
     let phase = 0;
     searchAnimation();
     dotdotdot = setInterval(searchAnimation, 1000);
+    sendHumanSearchRequest();
 }
+function addMessages() {
+    let footer = document.getElementById("footer");
+    footer.innerHTML = "";
+    let message = document.createElement("span");
+    message.id = "message";
+    footer.appendChild(message);
+    let smallMessage = document.createElement("div");
+    smallMessage.id = "smallMessage";
+    smallMessage.classList = "smallMessage";
+    footer.appendChild(smallMessage);
+}
+function endIncompleteGame() {
+
+}
+function tieMove(ymove, omove) {
+    youTiedRound();
+    displayYourSelection(ymove, 0);
+    displayOpponentSelection(omove, 0);
+    startCountDown();
+}
+function winMove(ymove, omove) {
+    youWinRound();
+    displayYourSelection(ymove, 1);
+    displayOpponentSelection(omove, -1);
+    startCountDown();
+}
+function loseMove(ymove, omove) {
+    youLoseRound();
+    displayYourSelection(ymove, -1);
+    displayOpponentSelection(omove, 1);
+    startCountDown;
+}
+function countDownFrom5() {
+    if (displayTimer == 0) {
+        displayTimer = 5;
+        clearInterval(countDown);
+        yourMove();
+    } else {
+        document.getElementById("smallMessage").innerText = "Starting next round in " + displayTimer-- + " seconds.";
+    }
+}
+function startCountDown() {
+    countDown = setInterval(countDownFrom5, 1000);
+    countDownFrom5();
+}
+function youWin() {
+
+}
+function opponentWins() {
+
+}
+function makeMove(move) {
+
+}
+function checkStatus() {
+    sendReq({"id": window.localStorage.getItem("gamerId")}, "https://api.games.olmmcc.tk/get_status_of_game", (json) => {
+        if (json.status == 0) {
+            if (json.waiting == 1) {
+                if (waiting == 1) {
+                    opponentMove(currentMove);
+                } else {
+                    document.getElementById("roundNum").innerText = ++round;
+                    let outcome = (currentMove - json.opponentMove + 3) % 3;
+                    if (outcome == 0) {
+                        tieMove(currentMove, json.opponentMove);
+                    } else if (outcome == 1) {
+                        winMove(currentMove, json.opponentMove);
+                        document.getElementById("yourScore").innerText = ++yourScore;
+                    } else {
+                        loseMove(currentMove, json.opponentMove);
+                        document.getElementById("opponentScore").innerText = ++opponentScore;
+                    }
+                }
+            }
+        } else if (json.status == 2) {
+            if (yourScore > opponentScore) {
+                youWin();
+            } else {
+                opponentWins();
+            }
+        } else {
+            clearInterval(statusChecker);
+            endIncompleteGame();
+        }
+    });
+}
+function startGame(id) {
+    document.getElementById("roundNum").innerText = "1";
+    document.getElementById("id").innerText = id;
+    displayAllSelections();
+    updateMessage("Found an opponent!");
+    waiting = false;
+    yourMove();
+    checkStatus();
+    statusChecker = setInterval(checkStatus, 1000);
+}
+function startRobotGame() {
+    sendReq({"id": window.localStorage.getItem("gamerId"), "type": "robot"}, "https://api.games.olmmcc.tk/new_game", (json) => {
+        addMessages();
+        startGame(json.id);
+    });
+}
+function waitForGame(id) {
+    sendReq({"id": window.localStorage.getItem("gamerId")}, "https://api.games.olmmcc.tk/get_status_of_game", (json) => {
+        if (json.opponent_found) {
+            clearInterval(dotdotdot);
+            clearInterval(opponentWaiter);
+            startGame(id);
+        }
+    });
+}
+function sendHumanSearchRequest() {
+    sendReq({"id": window.localStorage.getItem("gamerId")}, "https://api.games.olmmcc.tk/search_for_human_game", (json) => {
+        if (json.success) {
+            clearInterval(searchAnimation);
+            startGame(json.id);
+        } else {
+            sendReq({"id": window.localStorage.getItem("gamerId"), "type": "human"}, "https://api.games.olmmcc.tk/new_game", (json) => {
+                waitForGame(json.id);
+                opponentWaiter = setInterval(waitForGame, 1000, json.id);
+            });
+        }
+    });
+}
+function startSearch() {
+    if (window.localStorage.getItem("gamerId") == null) {
+        sendReq({}, "https://api.games.olmmcc.tk/new_id", (json) => {
+            window.localStorage.setItem("gamerId", json.id);
+            determineGameType();
+        });
+    } else {
+        determineGameType();
+    }
+}
+function determineGameType() {
+    if (document.getElementById("switch-input").checked) {
+        startRobotGame();
+    } else {
+        searchForOpponent();
+    }
+}
+function rockButton() {
+    if (takingInputs) {
+        makeMove(0);
+    }
+}
+function paperButton() {
+    if (takingInputs) {
+        makeMove(1);
+    }
+}
+function scissorsButton() {
+    if (takingInputs) {
+        makeMove(2);
+    }
+}
+document.addEventListener('keydown', keydown);
+closeButton = document.getElementById('closeNotification');
+if (closeButton) {
+    closeButton.addEventListener('click', closeNotification);
+}
+document.getElementById("rock").addEventListener("click", rockButton);
+document.getElementById("paper").addEventListener("click", paperButton);
+document.getElementById("scissors").addEventListener("click", scissorsButton);
 changeOpacity(0.3);
-searchForOpponent();
+newGameScreen();
+//searchForOpponent();
 //youLose();
-opponentMove();
-updateRound();
-updateScore();
-createNotification("Hi");
+//createNotification("Hi");
 //displayOpponentSelection("Paper", -1);
 //displayYourSelection("Paper", 0);
 //displayYourSelection("Paper", 1);
@@ -160,7 +337,7 @@ border: 5px solid (red white green);
     border-radius: 20px;
 
 border: 3px solid (green red);
-    border-radius: 10px; 
+    border-radius: 10px;
 */
 /*Actual opponent found
 <span id="message">Found an opponent!</span>
