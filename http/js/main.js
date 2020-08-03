@@ -3,7 +3,7 @@ yourScore = 0;
 opponentScore = 0;
 currentMove = -1;
 takingInputs = false;
-displayTimer = 5;
+displayTimer = 3;
 function closeNotification() {
     var element = document.getElementById("greyDiv");
     if (element != null) {
@@ -53,15 +53,19 @@ function displayOpponentSelection(ymove, result) {
     selection.style.border = "3px solid " + color;
 }
 function displayYourSelection(option, result) {
-    let selection = document.getElementById(option.toLowerCase());
-    if (option != 0) {
-        document.getElementById("rock").style.opacity = 0;
-    }
-    if (option != 1) {
+    let selection;
+    if (option == 0) {
+        selection = document.getElementById("rock");
         document.getElementById("paper").style.opacity = 0;
-    }
-    if (option != 2) {
         document.getElementById("scissors").style.opacity = 0;
+    } else if (option == 1) {
+        document.getElementById("rock").style.opacity = 0;
+        selection = document.getElementById("paper");
+        document.getElementById("scissors").style.opacity = 0;
+    } else {
+        document.getElementById("rock").style.opacity = 0;
+        document.getElementById("paper").style.opacity = 0;
+        selection = document.getElementById("scissors");
     }
     selection.style.opacity = 1;
     let color = "white";
@@ -91,9 +95,6 @@ function updateSmallMessage(messageText) {
     newSmallMessage.innerText = messageText;
     document.getElementById("footer").appendChild(newSmallMessage);
 }
-function updateStatus(statusText) {
-    document.getElementById("status").innerText = statusText;
-}
 function youLoseRound() {
     updateMessage("You lost round " + round + "!");
 }
@@ -111,7 +112,6 @@ function youWin() {
 }
 function yourMove() {
     updateSmallMessage("Waiting for your move.");
-    updateStatus("Your move");
     takingInputs = true;
     displayAllSelections();
 }
@@ -121,7 +121,6 @@ function opponentMove(ymove) {
     displayYourSelection(ymove, 0);
 }
 function newGameScreen() {
-    updateStatus("Choose your opponent type");
     document.getElementById("imageDiv2").style.display = "none";
     document.getElementById("footer").innerHTML =
         '<div id="roboDiv">\
@@ -141,11 +140,10 @@ function searchForOpponent() {
         image.style.opacity = 0.5;
     }
     addMessages();
-    document.getElementById("message").innerText = "Searching for human opponent";
     document.getElementById("smallMessage").innerHTML = '<span>Note: There have been</span> <span class="num">0</span> <span>human visitors in the last hour.</span>';
-    let status = document.getElementById("status");
+    let message = document.getElementById("message");
     let searchAnimation = () => {
-        status.innerHTML = "&nbsp".repeat(3 - phase) + ".".repeat(phase) + "&nbsp;Searching for opponent&nbsp;" + ".".repeat(phase) + "&nbsp".repeat(3 - phase);
+        message.innerHTML = "&nbsp".repeat(3 - phase) + ".".repeat(phase) + "&nbsp;Searching for opponent&nbsp;" + ".".repeat(phase) + "&nbsp".repeat(3 - phase);
         if (++phase == 4) {
             phase = 0;
         }
@@ -167,7 +165,7 @@ function addMessages() {
     footer.appendChild(smallMessage);
 }
 function endIncompleteGame() {
-
+    updateMessage("Your opponent left the game.");
 }
 function tieMove(ymove, omove) {
     youTiedRound();
@@ -179,61 +177,69 @@ function winMove(ymove, omove) {
     youWinRound();
     displayYourSelection(ymove, 1);
     displayOpponentSelection(omove, -1);
-    startCountDown();
 }
 function loseMove(ymove, omove) {
     youLoseRound();
     displayYourSelection(ymove, -1);
     displayOpponentSelection(omove, 1);
-    startCountDown;
 }
-function countDownFrom5() {
+function countDownFrom3() {
     if (displayTimer == 0) {
-        displayTimer = 5;
+        displayTimer = 3;
         clearInterval(countDown);
+        statusChecker = setInterval(checkStatus, 1000);
+        document.getElementById("roundNum").innerText = ++round;
         yourMove();
     } else {
-        document.getElementById("smallMessage").innerText = "Starting next round in " + displayTimer-- + " seconds.";
+        updateSmallMessage("Starting next round in " + displayTimer-- + " seconds.");
     }
 }
 function startCountDown() {
-    countDown = setInterval(countDownFrom5, 1000);
-    countDownFrom5();
+    countDown = setInterval(countDownFrom3, 1000);
+    countDownFrom3();
 }
 function youWin() {
-
+    updateMessage("You won!");
+    updateSmallMessage("The score was " + yourScore + " to " + opponentScore + ".");
 }
 function opponentWins() {
-
+    updateMessage("Your opponent won!");
+    updateSmallMessage("The score was " + yourScore + " to " + opponentScore + ".");
 }
 function makeMove(move) {
-    sendReq({"id": window.localStorage.getItem("gamerId"), "move": move}, "https://api.games.olmmcc.tk/make_move", () => {});
+    sendReq({ "id": window.localStorage.getItem("gamerId"), "move": move }, "https://api.games.olmmcc.tk/make_move", () => { });
 }
 function checkStatus() {
-    sendReq({"id": window.localStorage.getItem("gamerId")}, "https://api.games.olmmcc.tk/get_status_of_game", (json) => {
-        if (json.status == 0) {
-            if (json.waiting == 1) {
-                if (waiting == 1) {
-                    opponentMove(currentMove);
-                } else {
-                    document.getElementById("roundNum").innerText = ++round;
-                    let outcome = (currentMove - json.opponentMove + 3) % 3;
-                    if (outcome == 0) {
-                        tieMove(currentMove, json.opponentMove);
-                    } else if (outcome == 1) {
-                        winMove(currentMove, json.opponentMove);
-                        document.getElementById("yourScore").innerText = ++yourScore;
+    sendReq({ "id": window.localStorage.getItem("gamerId") }, "https://api.games.olmmcc.tk/get_status_of_game", (json) => {
+        if (json.status == 0 || json.status == 2) {
+            if (json.waiting == 1 && takingInputs == 0) {
+                opponentMove(currentMove);
+            } else if (json.opponent_move != null && currentMove != -1) {
+                let opponentMove = parseInt(json.opponent_move);
+                let outcome = (currentMove - opponentMove + 3) % 3;
+                if (outcome == 0) {
+                    tieMove(currentMove, opponentMove);
+                } else if (outcome == 1) {
+                    document.getElementById("yourScore").innerText = ++yourScore;
+                    winMove(currentMove, opponentMove);
+                    if (json.status == 2) {
+                        clearInterval(statusChecker);
+                        youWin();
                     } else {
-                        loseMove(currentMove, json.opponentMove);
-                        document.getElementById("opponentScore").innerText = ++opponentScore;
+                        startCountDown();
+                    }
+                } else {
+                    loseMove(currentMove, opponentMove);
+                    document.getElementById("opponentScore").innerText = ++opponentScore;
+                    if (json.status == 2) {
+                        clearInterval(statusChecker);
+                        youLose();
+                    } else {
+                        startCountDown();
                     }
                 }
-            }
-        } else if (json.status == 2) {
-            if (yourScore > opponentScore) {
-                youWin();
-            } else {
-                opponentWins();
+                currentMove = -1;
+                clearInterval(statusChecker);
             }
         } else {
             clearInterval(statusChecker);
@@ -244,21 +250,21 @@ function checkStatus() {
 function startGame(id) {
     document.getElementById("roundNum").innerText = "1";
     document.getElementById("id").innerText = id;
+    document.getElementById("imageDiv2").style.display = "initial";
     displayAllSelections();
     updateMessage("Found an opponent!");
-    waiting = false;
     yourMove();
     checkStatus();
     statusChecker = setInterval(checkStatus, 1000);
 }
 function startRobotGame() {
-    sendReq({"id": window.localStorage.getItem("gamerId"), "type": "robot"}, "https://api.games.olmmcc.tk/new_game", (json) => {
+    sendReq({ "id": window.localStorage.getItem("gamerId"), "type": "robot" }, "https://api.games.olmmcc.tk/new_game", (json) => {
         addMessages();
         startGame(json.id);
     });
 }
 function waitForGame(id) {
-    sendReq({"id": window.localStorage.getItem("gamerId")}, "https://api.games.olmmcc.tk/get_status_of_game", (json) => {
+    sendReq({ "id": window.localStorage.getItem("gamerId") }, "https://api.games.olmmcc.tk/get_status_of_game", (json) => {
         if (json.opponent_found) {
             clearInterval(dotdotdot);
             clearInterval(opponentWaiter);
@@ -267,12 +273,12 @@ function waitForGame(id) {
     });
 }
 function sendHumanSearchRequest() {
-    sendReq({"id": window.localStorage.getItem("gamerId")}, "https://api.games.olmmcc.tk/search_for_human_game", (json) => {
+    sendReq({ "id": window.localStorage.getItem("gamerId") }, "https://api.games.olmmcc.tk/search_for_human_game", (json) => {
         if (json.success) {
             clearInterval(searchAnimation);
             startGame(json.id);
         } else {
-            sendReq({"id": window.localStorage.getItem("gamerId"), "type": "human"}, "https://api.games.olmmcc.tk/new_game", (json) => {
+            sendReq({ "id": window.localStorage.getItem("gamerId"), "type": "human" }, "https://api.games.olmmcc.tk/new_game", (json) => {
                 waitForGame(json.id);
                 opponentWaiter = setInterval(waitForGame, 1000, json.id);
             });
@@ -298,17 +304,20 @@ function determineGameType() {
 }
 function rockButton() {
     if (takingInputs) {
-        makeMove(0);
+        currentMove = 0;
+        makeMove("0");
     }
 }
 function paperButton() {
     if (takingInputs) {
-        makeMove(1);
+        currentMove = 1;
+        makeMove("1");
     }
 }
 function scissorsButton() {
     if (takingInputs) {
-        makeMove(2);
+        currentMove = 2;
+        makeMove("2");
     }
 }
 document.addEventListener('keydown', keydown);

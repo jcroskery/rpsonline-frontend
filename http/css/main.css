@@ -117,22 +117,9 @@ span {
 		margin-left: 7px!important;
 	}
 }
-@media (max-width: 913px) {
-	#statusSpan {
-		display: none;
-	}
-	#status {
-		margin-left: 10px!important;
-	}
-}
 @media (max-width: 831px) {
 	#play {
 		display: none;
-	}
-}
-@media (max-width: 681px) {
-	#statusDiv {
-		display: none!important;
 	}
 }
 @media (max-aspect-ratio: 3/2) {
@@ -232,23 +219,6 @@ span {
 }
 .headerMargin {
 	margin: auto 10px!important;
-}
-#statusSpan {
-	margin: auto 10px;
-	color: white;
-}
-#statusDiv {
-	background-color: #14b314cc;
-	display: inline-flex;
-	border-right: 1px #00000088 solid;	
-	padding: 0 7px 0 0;
-}
-#status {
-	margin: auto 5px auto 0;
-	color: white;
-	background-color: #00000088;
-	font-size: large;
-	padding: 3px 8px;
 }
 #roboDiv {
 	display: inline-flex;
