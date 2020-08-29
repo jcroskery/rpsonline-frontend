@@ -65,12 +65,40 @@ span {
 	margin-bottom: 5px;
 }
 #mainScreen {
-	grid-row: 4/5;
-	grid-column: 1/4;
-	width: 100%;
-	text-align: center;
+	grid-row: 1/4;
+	grid-column: 1/5;
+	width: 100vw;
+	height: 100vh;
 	display: inline-flex;
-	flex-direction: row;
+}
+#mainLeft, #mainCentre, #mainRight {
+	height: 100vh;
+	width: 33.333vw;
+	display: grid;
+	align-items: center;
+	justify-items: center;
+}
+#mainLeft {
+	background-color: rgba(0, 0, 0, 0.5);
+}
+#mainCentre {
+	background-color: rgba(255, 255, 255, 0.5);
+}
+#mainRight {
+	background-color: rgba(255, 0, 0, 0.5);
+}
+.mainSpan {
+	font-size: 50px;
+}
+#titleSpan {
+	font-size: 20px;
+	position: fixed;
+	top: 75vh;
+	width: 100vw;
+	text-align: center;
+}
+#clickSpan {
+	font-size: 10vh;
 }
 #footer {
 	grid-row: 4/4;

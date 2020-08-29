@@ -115,7 +115,7 @@ function opponentMove(ymove) {
     displayYourSelection(ymove, 0);
 }
 function gameTypeScreen() {
-    console.log("HI");
+    startRobotGame();
 }
 function newGameScreen() {
     window.addEventListener("click", gameTypeScreen);
