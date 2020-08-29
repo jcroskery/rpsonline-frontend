@@ -99,16 +99,10 @@ function youLoseRound() {
     updateMessage("You lost round " + round + "!");
 }
 function youWinRound() {
-    updateMessage("You win round " + round + "!");
+    updateMessage("You won round " + round + "!");
 }
 function youTiedRound() {
     updateMessage("You tied round " + round + "!");
-}
-function youLose() {
-    updateMessage("You lose!");
-}
-function youWin() {
-    updateMessage("You win!");
 }
 function yourMove() {
     updateSmallMessage("Waiting for your move.");
@@ -120,19 +114,11 @@ function opponentMove(ymove) {
     takingInputs = false;
     displayYourSelection(ymove, 0);
 }
+function gameTypeScreen() {
+    console.log("HI");
+}
 function newGameScreen() {
-    document.getElementById("imageDiv2").style.display = "none";
-    document.getElementById("footer").innerHTML =
-        '<div id="roboDiv">\
-        <span id="play">Play against:</span>\
-        <label class="switch">\
-            <input id="switch-input" type="checkbox" />\
-            <span class="switch-label" data-on="Robot" data-off="Human"></span>\
-            <span class="switch-handle"></span>\
-        </label>\
-        <button id="startButton">Start Game</button>\
-    </div>';
-    document.getElementById("startButton").addEventListener("click", startSearch);
+    window.addEventListener("click", gameTypeScreen);
 }
 function searchForOpponent() {
     let images = document.getElementsByClassName("image");
@@ -207,12 +193,16 @@ function opponentWins() {
     updateSmallMessage("The score was " + yourScore + " to " + opponentScore + ".");
 }
 function makeMove(move) {
-    sendReq({ "id": window.localStorage.getItem("gamerId"), "move": move }, "https://api.games.olmmcc.tk/make_move", () => { });
+    if (takingInputs) {
+        takingInputs = false;
+        currentMove = move;
+        sendReq({ "id": window.localStorage.getItem("gamerId"), "move": move.toString() }, "https://api.games.olmmcc.tk/make_move", () => { });
+    }
 }
 function checkStatus() {
     sendReq({ "id": window.localStorage.getItem("gamerId") }, "https://api.games.olmmcc.tk/get_status_of_game", (json) => {
         if (json.status == 0 || json.status == 2) {
-            if (json.waiting == 1 && takingInputs == 0) {
+            if (json.waiting == 1) {
                 opponentMove(currentMove);
             } else if (json.opponent_move != null && currentMove != -1) {
                 let opponentMove = parseInt(json.opponent_move);
@@ -233,7 +223,7 @@ function checkStatus() {
                     document.getElementById("opponentScore").innerText = ++opponentScore;
                     if (json.status == 2) {
                         clearInterval(statusChecker);
-                        youLose();
+                        opponentWins();
                     } else {
                         startCountDown();
                     }
@@ -251,6 +241,8 @@ function startGame(id) {
     document.getElementById("roundNum").innerText = "1";
     document.getElementById("id").innerText = id;
     document.getElementById("imageDiv2").style.display = "initial";
+    document.getElementById("imageDiv1").style.display = "inline-flex";
+    document.getElementById("headerDiv").style.display = "inline-flex";
     displayAllSelections();
     updateMessage("Found an opponent!");
     yourMove();
@@ -264,6 +256,7 @@ function startRobotGame() {
     });
 }
 function waitForGame(id) {
+    document.getElementById("id").innerText = id;
     sendReq({ "id": window.localStorage.getItem("gamerId") }, "https://api.games.olmmcc.tk/get_status_of_game", (json) => {
         if (json.opponent_found) {
             clearInterval(dotdotdot);
@@ -275,7 +268,7 @@ function waitForGame(id) {
 function sendHumanSearchRequest() {
     sendReq({ "id": window.localStorage.getItem("gamerId") }, "https://api.games.olmmcc.tk/search_for_human_game", (json) => {
         if (json.success) {
-            clearInterval(searchAnimation);
+            clearInterval(dotdotdot);
             startGame(json.id);
         } else {
             sendReq({ "id": window.localStorage.getItem("gamerId"), "type": "human" }, "https://api.games.olmmcc.tk/new_game", (json) => {
@@ -303,22 +296,13 @@ function determineGameType() {
     }
 }
 function rockButton() {
-    if (takingInputs) {
-        currentMove = 0;
-        makeMove("0");
-    }
+    makeMove(0);
 }
 function paperButton() {
-    if (takingInputs) {
-        currentMove = 1;
-        makeMove("1");
-    }
+    makeMove(1);
 }
 function scissorsButton() {
-    if (takingInputs) {
-        currentMove = 2;
-        makeMove("2");
-    }
+    makeMove(2);
 }
 document.addEventListener('keydown', keydown);
 closeButton = document.getElementById('closeNotification');

@@ -54,12 +54,23 @@ html, body {
 #rock {
 	margin-left: 5vw;
 }
+#rock, #paper, #scissors {
+	opacity: 0.5;
+}
 span {
 	font-size: 20px;
 }
 #message {
 	font-size: calc(10px + 2vw);
 	margin-bottom: 5px;
+}
+#mainScreen {
+	grid-row: 4/5;
+	grid-column: 1/4;
+	width: 100%;
+	text-align: center;
+	display: inline-flex;
+	flex-direction: row;
 }
 #footer {
 	grid-row: 4/4;
@@ -75,9 +86,9 @@ span {
 	background-color: #ffffff88;
 	border-bottom: 1px #00000088 solid;
     grid-column: 1/4;
-	width: 100%;
+	width: 100vw;
 	height: 70px;
-	display: inline-flex;
+	display: none;
 	grid-row: 1/1;
 }
 .imageDiv {
@@ -87,11 +98,12 @@ span {
 #imageDiv1 {
 	grid-row: 2/2;
 	height: 17vw;
-	display: inline-flex;
+	display: none;
 }
 #imageDiv2 {
 	grid-row: 3/3;
 	height: 9vw;
+	display: none;
 }
 @media (max-width: 1139px) {
 	#bigIdSpan {
@@ -219,146 +231,4 @@ span {
 }
 .headerMargin {
 	margin: auto 10px!important;
-}
-#roboDiv {
-	display: inline-flex;
-	background-color: #E1B42Bcc;
-	padding: 10px;
-	border: 1px solid white;
-    border-radius: 5px;
-}
-#play {
-	margin: auto 10px;
-	color: white;
-}
-.switch {
-	position: relative;
-	display: block;
-	width: 100px;
-	height: 30px;
-	padding: 3px;
-	margin: auto 10px;
-	background: linear-gradient(to bottom, #eeeeee, #FFFFFF 25px);
-	background-image: -webkit-linear-gradient(top, #eeeeee, #FFFFFF 25px);
-	border-radius: 18px;
-	cursor: pointer;
-	box-sizing:content-box;
-}
-#switch-input {
-	position: absolute;
-	top: 0;
-	left: 0;
-	opacity: 0;
-	box-sizing:content-box;
-}
-.switch-label {
-	position: relative;
-	display: block;
-	height: inherit;
-	font-size: 13px;
-	border-radius: inherit;
-	box-sizing:content-box;
-}
-.switch-label:before, .switch-label:after {
-	position: absolute;
-	top: 50%;
-	margin-top: -.5em;
-	line-height: 1;
-	-webkit-transition: inherit;
-	-moz-transition: inherit;
-	-o-transition: inherit;
-	transition: inherit;
-	box-sizing:content-box;
-}
-.switch-label:before {
-	content: attr(data-off);
-	right: 11px;
-	color: #FFFFFF;
-	text-shadow: 0 1px rgba(0, 0, 0, 0.2);
-}
-.switch-label:after {
-	content: attr(data-on);
-	left: 11px;
-	color: #FFFFFF;
-	text-shadow: 0 1px rgba(0, 0, 0, 0.2);
-	opacity: 0;
-}
-#switch-input ~ .switch-label {
-	background: #E1B42B;
-}
-#switch-input:checked ~ .switch-label:before {
-	opacity: 0;
-}
-#switch-input:checked ~ .switch-label:after {
-	opacity: 1;
-}
-.switch-handle {
-	position: absolute;
-	top: 4px;
-	left: 4px;
-	width: 28px;
-	height: 28px;
-	background: linear-gradient(to bottom, #FFFFFF 40%, #f0f0f0);
-	background-image: -webkit-linear-gradient(top, #FFFFFF 40%, #f0f0f0);
-	border-radius: 100%;
-	box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
-}
-.switch-handle:before {
-	content: "";
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	margin: -6px 0 0 -6px;
-	width: 12px;
-	height: 12px;
-	background: linear-gradient(to bottom, #eeeeee, #FFFFFF);
-	background-image: -webkit-linear-gradient(top, #eeeeee, #FFFFFF);
-	border-radius: 6px;
-}
-#switch-input:checked ~ .switch-handle {
-	left: 74px;
-}
-
-.switch-label, .switch-handle {
-	transition: All 0.3s ease;
-	-webkit-transition: All 0.3s ease;
-	-moz-transition: All 0.3s ease;
-	-o-transition: All 0.3s ease;
-}
-
-#notificationP {
-    color: white;
-    padding: 0 40px;
-}
-#notificationDiv {
-    width: 60%;
-    top: 0;
-    left: 20%;
-    right: 20%;
-    background-color: rgba(0, 0, 0, 0.7);
-    border-radius: 22px;
-    text-align: center;
-	position: fixed;
-	z-index: 3;
-}
-#closeNotification {
-    margin-left: -40px;
-    width: 40px;
-    left: 80%;
-    top: 0;
-    position: fixed;
-    cursor: pointer;
-}
-#greyDiv {
-	width: 100%;
-	height: 100%;
-	top: 0;
-	left: 0;
-	background-color: rgba(0, 0, 0, 0.7);
-	position: fixed;
-	z-index: 3;
-}
-#closeNotification * {
-	z-index: 4;
-	position: fixed;
 }
