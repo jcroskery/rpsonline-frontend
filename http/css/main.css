@@ -43,6 +43,9 @@ html, body {
 	cursor: pointer;
 	color: white;
 }
+#mainLeft, #mainCentre, #mainRight {
+	cursor: pointer;
+}
 .image {
 	width: 30vw;
 }
@@ -87,15 +90,49 @@ span {
 #mainRight {
 	background-color: rgba(255, 0, 0, 0.5);
 }
-.mainSpan {
-	font-size: 50px;
+.mainImage {
+	width: 25vw;
 }
-#titleSpan {
-	font-size: 20px;
-	position: fixed;
-	top: 75vh;
+#mainSelectSpan {
+	font-size: 1.5vw;
+}
+#gameTypeScreen {
+	display: none;
+	grid-row: 1/4;
+	grid-column: 1/5;
 	width: 100vw;
-	text-align: center;
+	height: 100vh;
+	flex-direction: column;
+	align-items: center;
+}
+#rockGame, #newGame {
+	height: 50vh;
+	align-items: center;
+	justify-items: center;
+}
+#rockGame {
+	display: inline-flex;
+}
+.inline-flex {
+	display: inline-flex !important;
+}
+.none {
+	display: none !important;
+}
+#newGame {
+	display: grid;
+	background-color: rgba(255, 255, 255, 0.2);
+	width: 100vw;
+}
+#humanOpponent, #robotOpponent {
+	width: 50vw;
+	height: 50vh;
+}
+#humanOpponent {
+	background-color: rgba(0,255,0,0.2);
+}
+#robotOpponent {
+	background-color: rgba(255,255,0,0.2)
 }
 #clickSpan {
 	font-size: 10vh;
@@ -252,6 +289,7 @@ span {
 	border-right: 1px #00000088 solid;
 	background-color: #ff0000cc;
 	display: inline-flex;
+	cursor: pointer;
 }
 #newGameSpan {
 	margin: auto 10px;

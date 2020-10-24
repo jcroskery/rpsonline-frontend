@@ -109,16 +109,18 @@ function yourMove() {
     takingInputs = true;
     displayAllSelections();
 }
-function opponentMove(ymove) {
+function makeOpponentMove(ymove) {
     updateSmallMessage("Waiting for opponent's move.");
     takingInputs = false;
     displayYourSelection(ymove, 0);
 }
-function gameTypeScreen() {
-    startRobotGame();
-}
 function newGameScreen() {
-    window.addEventListener("click", gameTypeScreen);
+    document.getElementById("mainLeft").addEventListener("click", () => {
+        checkId(searchForOpponent);
+    });
+    document.getElementById("mainCentre").addEventListener("click", () => {
+        checkId(startRobotGame);
+    });
 }
 function searchForOpponent() {
     let images = document.getElementsByClassName("image");
@@ -195,7 +197,11 @@ function opponentWins() {
 function makeMove(move) {
     if (takingInputs) {
         takingInputs = false;
-        currentMove = move;
+        if (currentMove == -1) {
+            currentMove = move;
+        } else {
+            console.log("This should not happen");
+        }
         sendReq({ "id": window.localStorage.getItem("gamerId"), "move": move.toString() }, "https://api.games.olmmcc.tk/make_move", () => { });
     }
 }
@@ -203,7 +209,7 @@ function checkStatus() {
     sendReq({ "id": window.localStorage.getItem("gamerId") }, "https://api.games.olmmcc.tk/get_status_of_game", (json) => {
         if (json.status == 0 || json.status == 2) {
             if (json.waiting == 1) {
-                opponentMove(currentMove);
+                makeOpponentMove(currentMove);
             } else if (json.opponent_move != null && currentMove != -1) {
                 let opponentMove = parseInt(json.opponent_move);
                 let outcome = (currentMove - opponentMove + 3) % 3;
@@ -238,16 +244,39 @@ function checkStatus() {
     });
 }
 function startGame(id) {
+    document.getElementById("mainScreen").classList.add("none");
+    document.getElementById("mainScreen").classList.remove("inline-flex");
     document.getElementById("roundNum").innerText = "1";
     document.getElementById("id").innerText = id;
     document.getElementById("imageDiv2").style.display = "initial";
     document.getElementById("imageDiv1").style.display = "inline-flex";
     document.getElementById("headerDiv").style.display = "inline-flex";
+    document.getElementById("footer").style.display = "inline-flex";
     displayAllSelections();
     updateMessage("Found an opponent!");
     yourMove();
     checkStatus();
     statusChecker = setInterval(checkStatus, 1000);
+}
+function goToMainMenu() {
+    document.getElementById("headerDiv").style.display = "none";
+    document.getElementById("imageDiv1").style.display = "none";
+    document.getElementById("footer").style.display = "none";
+    document.getElementById("imageDiv2").style.display = "none";
+    document.getElementById("mainScreen").classList.add("inline-flex");
+    document.getElementById("mainScreen").classList.remove("none");
+    if (typeof statusChecker !== "undefined") {
+        clearInterval(statusChecker);
+    }
+    if (typeof opponentWaiter !== "undefined") {
+        clearInterval(opponentWaiter);
+    }
+    if (typeof dotdotdot !== "undefined") {
+        clearInterval(dotdotdot);
+    }
+    if (typeof countDown !== "undefined") {
+        clearInterval(countDown);
+    }
 }
 function startRobotGame() {
     sendReq({ "id": window.localStorage.getItem("gamerId"), "type": "robot" }, "https://api.games.olmmcc.tk/new_game", (json) => {
@@ -278,21 +307,15 @@ function sendHumanSearchRequest() {
         }
     });
 }
-function startSearch() {
+function checkId(startFn) {
+    document.getElementById("newGameDiv").addEventListener("click", goToMainMenu);
     if (window.localStorage.getItem("gamerId") == null) {
         sendReq({}, "https://api.games.olmmcc.tk/new_id", (json) => {
             window.localStorage.setItem("gamerId", json.id);
-            determineGameType();
+            startFn();
         });
     } else {
-        determineGameType();
-    }
-}
-function determineGameType() {
-    if (document.getElementById("switch-input").checked) {
-        startRobotGame();
-    } else {
-        searchForOpponent();
+        startFn();
     }
 }
 function rockButton() {
@@ -305,10 +328,6 @@ function scissorsButton() {
     makeMove(2);
 }
 document.addEventListener('keydown', keydown);
-closeButton = document.getElementById('closeNotification');
-if (closeButton) {
-    closeButton.addEventListener('click', closeNotification);
-}
 document.getElementById("rock").addEventListener("click", rockButton);
 document.getElementById("paper").addEventListener("click", paperButton);
 document.getElementById("scissors").addEventListener("click", scissorsButton);
