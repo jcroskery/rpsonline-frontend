@@ -236,19 +236,25 @@ function checkStatus() {
         }
     });
 }
-function displayGameScreen() {
+function displayGameScreen(id = "None") {
     document.getElementById("mainScreen").classList.add("none");
     document.getElementById("mainScreen").classList.remove("inline-flex");
     document.getElementById("imageDiv2").style.display = "initial";
     document.getElementById("imageDiv1").style.display = "inline-flex";
     document.getElementById("headerDiv").style.display = "inline-flex";
     document.getElementById("footer").style.display = "inline-flex";
-}
-function startGame(id) {
-    displayGameScreen();
+    round = 1;
+    yourScore = 0;
+    opponentScore = 0;
+    takingInputs = false;
     document.getElementById("roundNum").innerText = "1";
     document.getElementById("id").innerText = id;
+    document.getElementById("yourScore").innerText = yourScore;
+    document.getElementById("opponentScore").innerText = opponentScore;
     displayAllSelections();
+}
+function startGame(id) {
+    displayGameScreen(id);
     updateMessage("Found an opponent!");
     yourMove();
     checkStatus();
@@ -329,33 +335,3 @@ document.getElementById("paper").addEventListener("click", paperButton);
 document.getElementById("scissors").addEventListener("click", scissorsButton);
 changeOpacity(0.3);
 newGameScreen();
-//searchForOpponent();
-//youLose();
-//createNotification("Hi");
-//displayOpponentSelection("Paper", -1);
-//displayYourSelection("Paper", 0);
-//displayYourSelection("Paper", 1);
-//displayAllSelections();
-
-/*Searching
-
-*/
-/*Borders
-border: 5px solid (red white green);
-    border-radius: 20px;
-
-border: 3px solid (green red);
-    border-radius: 10px;
-*/
-/*Actual opponent found
-<span id="message">Found an opponent!</span>
-<span id="message">You won round 1!</span>
-<span id="message">You won!</span>
-<span id="message">You lost!</span>
-
-                <span></span>
-                <span></span>
-                */
-/*Game id
-<span id="id" class="num">1</span>
-*/
