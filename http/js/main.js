@@ -1,7 +1,6 @@
 round = 1;
 yourScore = 0;
 opponentScore = 0;
-currentMove = -1;
 takingInputs = false;
 displayTimer = 3;
 function closeNotification() {
@@ -111,7 +110,6 @@ function yourMove() {
 }
 function makeOpponentMove(ymove) {
     updateSmallMessage("Waiting for opponent's move.");
-    takingInputs = false;
     displayYourSelection(ymove, 0);
 }
 function newGameScreen() {
@@ -123,6 +121,7 @@ function newGameScreen() {
     });
 }
 function searchForOpponent() {
+    displayGameScreen();
     let images = document.getElementsByClassName("image");
     for (image of images) {
         image.style.opacity = 0.5;
@@ -197,11 +196,6 @@ function opponentWins() {
 function makeMove(move) {
     if (takingInputs) {
         takingInputs = false;
-        if (currentMove == -1) {
-            currentMove = move;
-        } else {
-            console.log("This should not happen");
-        }
         sendReq({ "id": window.localStorage.getItem("gamerId"), "move": move.toString() }, "https://api.games.olmmcc.tk/make_move", () => { });
     }
 }
@@ -209,15 +203,15 @@ function checkStatus() {
     sendReq({ "id": window.localStorage.getItem("gamerId") }, "https://api.games.olmmcc.tk/get_status_of_game", (json) => {
         if (json.status == 0 || json.status == 2) {
             if (json.waiting == 1) {
-                makeOpponentMove(currentMove);
-            } else if (json.opponent_move != null && currentMove != -1) {
+                makeOpponentMove(json.your_move);
+            } else if (json.opponent_move != null && json.round == round) {
                 let opponentMove = parseInt(json.opponent_move);
-                let outcome = (currentMove - opponentMove + 3) % 3;
+                let outcome = (json.your_move - opponentMove + 3) % 3;
                 if (outcome == 0) {
-                    tieMove(currentMove, opponentMove);
+                    tieMove(json.your_move, opponentMove);
                 } else if (outcome == 1) {
                     document.getElementById("yourScore").innerText = ++yourScore;
-                    winMove(currentMove, opponentMove);
+                    winMove(json.your_move, opponentMove);
                     if (json.status == 2) {
                         clearInterval(statusChecker);
                         youWin();
@@ -225,7 +219,7 @@ function checkStatus() {
                         startCountDown();
                     }
                 } else {
-                    loseMove(currentMove, opponentMove);
+                    loseMove(json.your_move, opponentMove);
                     document.getElementById("opponentScore").innerText = ++opponentScore;
                     if (json.status == 2) {
                         clearInterval(statusChecker);
@@ -234,7 +228,6 @@ function checkStatus() {
                         startCountDown();
                     }
                 }
-                currentMove = -1;
                 clearInterval(statusChecker);
             }
         } else {
@@ -243,15 +236,18 @@ function checkStatus() {
         }
     });
 }
-function startGame(id) {
+function displayGameScreen() {
     document.getElementById("mainScreen").classList.add("none");
     document.getElementById("mainScreen").classList.remove("inline-flex");
-    document.getElementById("roundNum").innerText = "1";
-    document.getElementById("id").innerText = id;
     document.getElementById("imageDiv2").style.display = "initial";
     document.getElementById("imageDiv1").style.display = "inline-flex";
     document.getElementById("headerDiv").style.display = "inline-flex";
     document.getElementById("footer").style.display = "inline-flex";
+}
+function startGame(id) {
+    displayGameScreen();
+    document.getElementById("roundNum").innerText = "1";
+    document.getElementById("id").innerText = id;
     displayAllSelections();
     updateMessage("Found an opponent!");
     yourMove();
