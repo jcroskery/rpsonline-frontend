@@ -127,7 +127,7 @@ function searchForOpponent() {
         image.style.opacity = 0.5;
     }
     addMessages();
-    document.getElementById("smallMessage").innerHTML = '<span>Note: There have been</span> <span class="num">0</span> <span>human visitors in the last hour.</span>';
+    document.getElementById("smallMessage").innerHTML = '';
     let message = document.getElementById("message");
     let searchAnimation = () => {
         message.innerHTML = "&nbsp".repeat(3 - phase) + ".".repeat(phase) + "&nbsp;Searching for opponent&nbsp;" + ".".repeat(phase) + "&nbsp".repeat(3 - phase);
