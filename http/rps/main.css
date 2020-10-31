@@ -13,11 +13,11 @@ html, body {
 }
 
 #back1 {
-    background: url("/images/games.jpg");
+    background: url("/rps/images/games.jpg");
 }
 
 #back2 {
-    background: url("/images/red.jpg");
+    background: url("/rps/images/red.jpg");
     opacity: 0.5;
 }
 #header {

@@ -3,28 +3,6 @@ yourScore = 0;
 opponentScore = 0;
 takingInputs = false;
 displayTimer = 3;
-function closeNotification() {
-    var element = document.getElementById("greyDiv");
-    if (element != null) {
-        element.parentNode.removeChild(element);
-    }
-}
-function createNotification(notificationText) {
-    closeNotification(); //Let's close other notifications first
-    let greyDiv = document.createElement("div");
-    greyDiv.id = 'greyDiv';
-    greyDiv.innerHTML = "\
-        <div id='notificationDiv'>\
-        <p id='notificationP'>" + notificationText + "</p>\
-        <svg id='closeNotification' viewBox='0, 0, 100, 100'>\
-            <circle cx=50 cy=50 r=50 fill=black />\
-            <rect class='whiteRect' y='55' rx=13 ry=13 x='-45' transform='rotate(-45 0 0)' width='90' height='25' />\
-            <rect class='whiteRect' y='-15' rx=13 ry=13 x='25' transform='rotate(45 0 0)' width='90' height='25' />\
-        </svg>\
-        </div>";
-    document.getElementById('body').appendChild(greyDiv);
-    document.getElementById('closeNotification').addEventListener('click', closeNotification);
-}
 function keydown(event) {
     if (event.keyCode == 27) {
         closeNotification();
@@ -119,6 +97,7 @@ function newGameScreen() {
     document.getElementById("mainCentre").addEventListener("click", () => {
         checkId(startRobotGame);
     });
+    document.getElementById("mainRight").addEventListener("click", () => {window.location = "/"});
 }
 function searchForOpponent() {
     displayGameScreen();
