@@ -3,6 +3,7 @@ yourScore = 0;
 opponentScore = 0;
 takingInputs = false;
 displayTimer = 3;
+apiUrl = "https://fallingleafsoftware.com/api/rpsonline/";
 function keydown(event) {
     if (event.keyCode == 27) {
         closeNotification();
@@ -175,11 +176,11 @@ function opponentWins() {
 function makeMove(move) {
     if (takingInputs) {
         takingInputs = false;
-        sendReq({ "id": window.localStorage.getItem("gamerId"), "move": move.toString() }, "https://api.games.olmmcc.tk/make_move", () => { });
+        sendReq({ "id": window.localStorage.getItem("gamerId"), "move": move.toString() }, apiUrl + "make_move", () => { });
     }
 }
 function checkStatus() {
-    sendReq({ "id": window.localStorage.getItem("gamerId") }, "https://api.games.olmmcc.tk/get_status_of_game", (json) => {
+    sendReq({ "id": window.localStorage.getItem("gamerId") }, apiUrl + "get_status_of_game", (json) => {
         if (json.status == 0 || json.status == 2) {
             if (json.waiting == 1) {
                 makeOpponentMove(json.your_move);
@@ -260,14 +261,14 @@ function goToMainMenu() {
     }
 }
 function startRobotGame() {
-    sendReq({ "id": window.localStorage.getItem("gamerId"), "type": "robot" }, "https://api.games.olmmcc.tk/new_game", (json) => {
+    sendReq({ "id": window.localStorage.getItem("gamerId"), "type": "robot" }, apiUrl + "new_game", (json) => {
         addMessages();
         startGame(json.id);
     });
 }
 function waitForGame(id) {
     document.getElementById("id").innerText = id;
-    sendReq({ "id": window.localStorage.getItem("gamerId") }, "https://api.games.olmmcc.tk/get_status_of_game", (json) => {
+    sendReq({ "id": window.localStorage.getItem("gamerId") }, apiUrl + "get_status_of_game", (json) => {
         if (json.opponent_found) {
             clearInterval(dotdotdot);
             clearInterval(opponentWaiter);
@@ -276,12 +277,12 @@ function waitForGame(id) {
     });
 }
 function sendHumanSearchRequest() {
-    sendReq({ "id": window.localStorage.getItem("gamerId") }, "https://api.games.olmmcc.tk/search_for_human_game", (json) => {
+    sendReq({ "id": window.localStorage.getItem("gamerId") }, apiUrl + "search_for_human_game", (json) => {
         if (json.success) {
             clearInterval(dotdotdot);
             startGame(json.id);
         } else {
-            sendReq({ "id": window.localStorage.getItem("gamerId"), "type": "human" }, "https://api.games.olmmcc.tk/new_game", (json) => {
+            sendReq({ "id": window.localStorage.getItem("gamerId"), "type": "human" }, apiUrl + "new_game", (json) => {
                 waitForGame(json.id);
                 opponentWaiter = setInterval(waitForGame, 1000, json.id);
             });
@@ -291,7 +292,7 @@ function sendHumanSearchRequest() {
 function checkId(startFn) {
     document.getElementById("newGameDiv").addEventListener("click", goToMainMenu);
     if (window.localStorage.getItem("gamerId") == null) {
-        sendReq({}, "https://api.games.olmmcc.tk/new_id", (json) => {
+        sendReq({}, apiUrl + "new_id", (json) => {
             window.localStorage.setItem("gamerId", json.id);
             startFn();
         });

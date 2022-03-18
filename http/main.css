@@ -1,0 +1,300 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.backgroundimg {
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}
+
+#back1 {
+    background: url("/rps/images/games.jpg");
+}
+
+#back2 {
+    background: url("/rps/images/red.jpg");
+    opacity: 0.5;
+}
+#header {
+    grid-column: 1/3;
+    grid-row: 1/1;
+}
+#mainDiv {
+    display: inline-grid;
+    z-index: 2;
+    position: absolute;
+    width: 100%;
+    justify-content: center;
+    height: 100%;
+	padding: 0;
+	grid-template-columns: min-content min-content auto min-content;
+}
+#startButton {
+	background-color: rgb(47, 180, 47);
+	border: 3px solid white;
+	border-radius: 5px;
+	padding: 7px 10px;
+	margin-left: 20px;
+	cursor: pointer;
+	color: white;
+}
+#mainLeft, #mainCentre, #mainRight {
+	cursor: pointer;
+}
+.image {
+	width: 30vw;
+}
+.smallImage {
+	width: 15vw;
+	display: none;
+	margin-left: 42.5vw;
+}
+#rock {
+	margin-left: 5vw;
+}
+#rock, #paper, #scissors {
+	opacity: 0.5;
+}
+span {
+	font-size: 20px;
+}
+#message {
+	font-size: calc(10px + 2vw);
+	margin-bottom: 5px;
+}
+#mainScreen {
+	grid-row: 1/4;
+	grid-column: 1/5;
+	width: 100vw;
+	height: 100vh;
+	display: inline-flex;
+}
+#mainLeft, #mainCentre, #mainRight {
+	height: 100vh;
+	width: 33.333vw;
+	display: grid;
+	align-items: center;
+	justify-items: center;
+}
+#mainLeft {
+	background-color: rgba(0, 0, 0, 0.5);
+}
+#mainCentre {
+	background-color: rgba(255, 255, 255, 0.5);
+}
+#mainRight {
+	background-color: rgba(255, 0, 0, 0.5);
+}
+.mainImage {
+	width: 25vw;
+}
+#mainSelectSpan {
+	font-size: 1.5vw;
+}
+#gameTypeScreen {
+	display: none;
+	grid-row: 1/4;
+	grid-column: 1/5;
+	width: 100vw;
+	height: 100vh;
+	flex-direction: column;
+	align-items: center;
+}
+#rockGame, #newGame {
+	height: 50vh;
+	align-items: center;
+	justify-items: center;
+}
+#rockGame {
+	display: inline-flex;
+}
+.inline-flex {
+	display: inline-flex !important;
+}
+.none {
+	display: none !important;
+}
+#newGame {
+	display: grid;
+	background-color: rgba(255, 255, 255, 0.2);
+	width: 100vw;
+}
+#humanOpponent, #robotOpponent {
+	width: 50vw;
+	height: 50vh;
+}
+#humanOpponent {
+	background-color: rgba(0,255,0,0.2);
+}
+#robotOpponent {
+	background-color: rgba(255,255,0,0.2)
+}
+#clickSpan {
+	font-size: 10vh;
+}
+#footer {
+	grid-row: 4/4;
+	grid-column: 1/4;
+	width: 100%;
+	text-align: center;
+	display: inline-flex;
+	align-items: center;
+	flex-direction: column;
+}
+#headerDiv {
+    z-index: 2;
+	background-color: #ffffff88;
+	border-bottom: 1px #00000088 solid;
+    grid-column: 1/4;
+	width: 100vw;
+	height: 70px;
+	display: none;
+	grid-row: 1/1;
+}
+.imageDiv {
+    width: 100vw;
+	grid-column: 1/4;
+}
+#imageDiv1 {
+	grid-row: 2/2;
+	height: 17vw;
+	display: none;
+}
+#imageDiv2 {
+	grid-row: 3/3;
+	height: 9vw;
+	display: none;
+}
+@media (max-width: 1139px) {
+	#bigIdSpan {
+		display: none!important;
+	}
+	#smallIdSpan {
+		display: initial!important;
+	}
+}
+@media (max-width: 1055px) {
+	#bigRound {
+		display: none!important;
+	}
+	#smallRound {
+		display: initial!important;
+	}
+}
+@media (max-width: 991px) {
+	#score {
+		display: none;
+	}
+	.leftMargin {
+		margin-left: 7px!important;
+	}
+}
+@media (max-width: 831px) {
+	#play {
+		display: none;
+	}
+}
+@media (max-aspect-ratio: 3/2) {
+	#imageDiv1 {
+		flex-direction: column;
+		height: auto;
+		width: 100%;
+	}
+	.image {
+		margin: auto!important;
+	}
+    #rock {
+        width: 36vh;
+        height: 20vh;
+    }
+    #paper {
+        width: 36vh;
+        height: 20vh;
+    }
+    #scissors {
+        width: 36vh;
+        height: 20vh;
+    }
+    #message {
+        width: 90vw;
+        font-size: 20px;
+	}
+	#smallMessage span {
+		font-size: 15px!important;
+	}
+}
+#refresh {
+	margin: 10px;
+	height: calc(100% - 20px);
+}
+#score {
+	color: white;
+	margin: auto 10px;
+}
+.num {
+	margin: auto 0;
+	padding: 1px;
+	color: white;
+	background-color: #00000044;
+	font-size: large;
+	border: 1px solid white;
+	border-radius: 2px;
+}
+.topSpan {
+	margin: auto 5px;
+	color: white;
+}
+#scoreDiv {
+	background-color: #5555ffcc; 
+	display: inline-flex;
+	border-right: 1px #00000088 solid;	
+	padding: 0 7px 0 0;
+}
+.round {
+	margin: auto 10px;
+	color: white;
+}
+#smallRound {
+	display: none;
+	margin-right: 4px;
+}
+#roundDiv {
+	background-color: #cb2af3cc;
+	display: inline-flex;
+	border-right: 1px #00000088 solid;	
+	padding: 0 7px 0 0;
+}
+.idSpan {
+	margin: auto 10px;
+	color: white;
+}
+#smallIdSpan {
+	margin-right: 5px;
+	margin-left: 7px;
+	display: none;
+}
+#idDiv {
+	background-color: #000000cc;
+	display: inline-flex;
+	border-right: 1px #00000088 solid;
+	padding-right: 7px;
+}
+#newGameDiv {
+	width: 210px;
+	border-right: 1px #00000088 solid;
+	background-color: #ff0000cc;
+	display: inline-flex;
+	cursor: pointer;
+}
+#newGameSpan {
+	margin: auto 10px;
+	color: white;
+}
+.headerMargin {
+	margin: auto 10px!important;
+}
